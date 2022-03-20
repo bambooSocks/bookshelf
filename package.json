@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently npm:clientDev npm:serverDev -c bgRed.bold,bgBlue.bold",
     "clientDev": "cd client && npm run dev",
-    "serverDev": "cd server && npm start",
+    "serverDev": "cd server && npm run dev",
+    "codegen": "cd client && npm run codegen",
     "postinstall": "npm run install:client && npm run install:server",
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install"

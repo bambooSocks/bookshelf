@@ -1,44 +1,30 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import {Layout} from "antd"
+import GlobalFonts from "./style/fonts"
+import {AudioBookGrid} from "./components/grid/AudioBookGrid"
+import {EbookGrid} from "./components/grid/EbookGrid"
+import {SiteHeader} from "./components/layout/SiteHeader"
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom"
 
-function App() {
-  const [count, setCount] = useState(0)
+const {Content, Footer} = Layout
 
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <BrowserRouter>
+      <GlobalFonts />
+      <Layout style={{minHeight: "100vh"}}>
+        <SiteHeader />
+        <Layout className="site-layout">
+          <Content style={{margin: "0 16px"}}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/e" />} />
+              <Route path="/e" element={<EbookGrid />} />
+              <Route path="/a" element={<AudioBookGrid />} />
+            </Routes>
+          </Content>
+          <Footer style={{textAlign: "center"}}>©2022 Created by Matej Majtan</Footer>
+        </Layout>
+      </Layout>
+    </BrowserRouter>
   )
 }
 

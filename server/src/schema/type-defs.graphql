@@ -1,5 +1,37 @@
+type Book {
+  id: Int!
+  title: String!
+  series_index: Int!
+  author_sort: String!
+  cover_path: String!
+  file_path: String!
+}
+
+type Series {
+  id: Int!
+  name: String!
+}
+
+type Author {
+  id: Int!
+  name: String!
+  sort: String!
+}
+
+type Tag {
+  id: Int!
+  name: String!
+}
+
 type Query {
-  test: String!
+  ebooks(authors: [String!], series: [String!], tags: [String!]): [Book!]!
+  ebook_series: [Series!]!
+  ebook_authors: [Author!]!
+  ebook_tags: [Tag!]!
+  audiobooks(authors: [String!], series: [String!], tags: [String!]): [Book!]!
+  audiobook_series: [Series!]!
+  audiobook_authors: [Author!]!
+  audiobook_tags: [Tag!]!
 }
 
 schema {

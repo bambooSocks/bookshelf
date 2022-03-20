@@ -5,15 +5,27 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "codegen": "apollo codegen:generate --localSchemaFile=../server/src/schema/type-defs.graphql --target=typescript --tagName=gql",
+    "clean_codegen": "rm -rf `find . -type d -name __generated__`"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.10",
+    "antd": "^4.19.2",
+    "graphql": "^16.3.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-player": "^2.10.0",
+    "react-responsive": "^9.0.0-beta.6",
+    "react-router": "^6.2.2",
+    "react-router-dom": "^6.2.2",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
+    "@types/styled-components": "^5.1.24",
     "@vitejs/plugin-react": "^1.0.7",
     "typescript": "^4.5.4",
     "vite": "^2.8.0"
