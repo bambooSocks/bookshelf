@@ -21,9 +21,8 @@ export const SiteHeader: React.FC = () => {
   const navigate = useNavigate()
   const loc = useLocation()
 
-  console.log("loc", loc)
   return (
-    <Header>
+    <Header style={{position: "sticky", top: "0", zIndex: "50"}}>
       <Logo style={{cursor: "pointer"}}>
         <img src={BookSvg} width="25px" color="white" style={{marginRight: "0.5em"}} />
         Bookshelf

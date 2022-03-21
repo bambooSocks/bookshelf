@@ -7,8 +7,8 @@ import {DeleteOutlined} from "@ant-design/icons"
 import {AudiobookQuery, AudiobookQueryVariables} from "./__generated__/AudiobookQuery"
 import {AudiobookFilterQuery} from "./__generated__/AudiobookFilterQuery"
 import styled from "styled-components"
-import ReactPlayer from "react-player"
 import {AudiobookCard} from "./AudiobookCard"
+import {useLocalStorage} from "../helper/useLocalStorage"
 
 const {Option} = Select
 
@@ -46,6 +46,7 @@ export const AudioBookGrid: React.FC = () => {
   const [authorsFilter, setAuthorsFilter] = useState<string[]>([])
   const [seriesFilter, setSeriesFilter] = useState<string[]>([])
   const [tagsFilter, setTagsFilter] = useState<string[]>([])
+  const [favourite, setFavourite] = useLocalStorage("audiobooks_favourite", [])
 
   const isLargeScreen = useMediaQuery({query: "only screen and (min-width: 768px)"})
 
@@ -148,7 +149,6 @@ export const AudioBookGrid: React.FC = () => {
           )}
         </BookGrid>
       </Spin>
-      <ReactPlayer url={`http://localhost:4000/audiobooks/test.m4b`} />
     </>
   )
 }

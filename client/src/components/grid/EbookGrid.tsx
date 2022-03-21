@@ -8,6 +8,7 @@ import styled from "styled-components"
 import {DeleteOutlined} from "@ant-design/icons"
 import {useMediaQuery} from "react-responsive"
 import {EbookFilterQuery} from "./__generated__/EbookFilterQuery"
+import {useLocalStorage} from "../helper/useLocalStorage"
 
 const {Option} = Select
 
@@ -45,6 +46,7 @@ export const EbookGrid: React.FC = () => {
   const [authorsFilter, setAuthorsFilter] = useState<string[]>([])
   const [seriesFilter, setSeriesFilter] = useState<string[]>([])
   const [tagsFilter, setTagsFilter] = useState<string[]>([])
+  const [favourite, setFavourite] = useLocalStorage("ebooks_favourite", [])
 
   const isLargeScreen = useMediaQuery({query: "only screen and (min-width: 768px)"})
 
