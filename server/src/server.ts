@@ -6,7 +6,7 @@ import {schema} from "./schema"
 import {BooksSource} from "./datasources/booksSource"
 import path from "path"
 
-const PORT = 4000
+const PORT = process.env.NODE_ENV === "production" ? 8081 : 4000
 
 const ebooksKnexConfig = {
   client: "sqlite3",
@@ -39,8 +39,11 @@ const startApolloServer = async () => {
   await server.start()
 
   app.use(express.static(path.join(__dirname, "../../data/")))
+  app.use(express.static(path.join(__dirname, "../../client/dist")))
 
   server.applyMiddleware({app})
+
+  console.log(`Listening on port ${PORT}`)
 
   await new Promise(() => httpServer.listen({port: PORT}))
 }

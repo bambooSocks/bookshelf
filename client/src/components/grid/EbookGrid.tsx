@@ -1,14 +1,13 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {Button, Empty, PageHeader, Select, Spin, Tooltip} from "antd"
 import {BookGrid} from "./BookGrid"
 import {EbookCard} from "./EbookCard"
 import {gql, useQuery} from "@apollo/client"
-import {EbookQuery, EbookQueryVariables} from "./__generated__/EbookQuery"
+import {EbookQuery, EbookQueryVariables, EbookQuery_ebooks} from "./__generated__/EbookQuery"
 import styled from "styled-components"
 import {DeleteOutlined} from "@ant-design/icons"
 import {useMediaQuery} from "react-responsive"
 import {EbookFilterQuery} from "./__generated__/EbookFilterQuery"
-import {useLocalStorage} from "../helper/useLocalStorage"
 
 const {Option} = Select
 
@@ -46,7 +45,29 @@ export const EbookGrid: React.FC = () => {
   const [authorsFilter, setAuthorsFilter] = useState<string[]>([])
   const [seriesFilter, setSeriesFilter] = useState<string[]>([])
   const [tagsFilter, setTagsFilter] = useState<string[]>([])
-  const [favourite, setFavourite] = useLocalStorage("ebooks_favourite", [])
+  const [favourite, setFavourite] = useState<number[]>(() => {
+    const saved = localStorage.getItem("ebooks_favourite")
+    return saved ? JSON.parse(saved) : []
+  })
+
+  useEffect(() => {
+    localStorage.setItem("ebooks_favourite", JSON.stringify(favourite))
+  }, [favourite])
+
+  const generateEbookCard = (book: EbookQuery_ebooks) => (
+    <EbookCard
+      title={book.title}
+      author={book.author_sort}
+      cover={book.cover_path}
+      filename={book.file_path}
+      favourite={favourite.includes(book.id)}
+      onFavourite={() =>
+        setFavourite((old) =>
+          old.includes(book.id) ? old.filter((n) => n !== book.id) : [...old, book.id]
+        )
+      }
+    />
+  )
 
   const isLargeScreen = useMediaQuery({query: "only screen and (min-width: 768px)"})
 
@@ -133,14 +154,10 @@ export const EbookGrid: React.FC = () => {
       <Spin spinning={bookLoading} size="large">
         <BookGrid>
           {bookData && bookData?.ebooks ? (
-            bookData.ebooks.map((book) => (
-              <EbookCard
-                title={book.title}
-                author={book.author_sort}
-                cover={book.cover_path}
-                filename={book.file_path}
-              />
-            ))
+            <>
+              {bookData.ebooks.filter((b) => favourite.includes(b.id)).map(generateEbookCard)}
+              {bookData.ebooks.filter((b) => !favourite.includes(b.id)).map(generateEbookCard)}
+            </>
           ) : (
             <Empty />
           )}

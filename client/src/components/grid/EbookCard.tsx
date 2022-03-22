@@ -1,8 +1,8 @@
-import React, {useState} from "react"
+import React from "react"
 import {Image, Button, Card} from "antd"
 import {DownloadOutlined, StarFilled, StarOutlined} from "@ant-design/icons"
 import styled from "styled-components"
-import {useLocalStorage} from "../helper/useLocalStorage"
+import {BASE_URL} from "../../config"
 const {Meta} = Card
 
 interface Props {
@@ -10,6 +10,8 @@ interface Props {
   author: string
   cover: string
   filename: string
+  favourite: boolean
+  onFavourite: () => void
 }
 
 const fallback =
@@ -21,15 +23,20 @@ const CardContainer = styled.div`
   gap: 8px;
 `
 
-export const EbookCard: React.FC<Props> = ({title, author, cover, filename}) => {
-  const [favourite, setFavourite] = useState(false)
-
+export const EbookCard: React.FC<Props> = ({
+  title,
+  author,
+  cover,
+  filename,
+  favourite,
+  onFavourite
+}) => {
   return (
     <div>
       <Card
         hoverable
         style={{width: 240}}
-        cover={<Image src={`http://localhost:4000/${cover}`} fallback={fallback} />}
+        cover={<Image src={`${BASE_URL}/${cover}`} fallback={fallback} />}
       >
         <Meta title={title} description={author} />
         <CardContainer>
@@ -38,7 +45,7 @@ export const EbookCard: React.FC<Props> = ({title, author, cover, filename}) => 
             shape="round"
             icon={<DownloadOutlined />}
             size="middle"
-            href={`http://localhost:4000/${filename}`}
+            href={`${BASE_URL}/${filename}`}
           >
             Download
           </Button>
@@ -47,7 +54,7 @@ export const EbookCard: React.FC<Props> = ({title, author, cover, filename}) => 
             shape="circle"
             icon={favourite ? <StarFilled style={{color: "#FFBF00"}} /> : <StarOutlined />}
             size="middle"
-            onClick={() => setFavourite((old) => !old)}
+            onClick={() => onFavourite()}
           />
         </CardContainer>
       </Card>

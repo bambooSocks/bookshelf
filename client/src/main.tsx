@@ -3,8 +3,10 @@ import ReactDOM from "react-dom"
 import App from "./App"
 import "antd/dist/antd.css"
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client"
+import {RecoilRoot} from "recoil"
+import {BASE_URL} from "./config"
 
-let apolloUri = "http://localhost:4000/graphql"
+const apolloUri = `${BASE_URL}/graphql`
 
 const client = new ApolloClient({
   uri: apolloUri,
@@ -13,9 +15,11 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <App />
-    </ApolloProvider>
+    <RecoilRoot>
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
 )
