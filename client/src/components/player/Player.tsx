@@ -9,7 +9,7 @@ import Forward30sSVG from "../icon/forward30s.svg"
 import SlideDownSVG from "../icon/slidedown.svg"
 import SlideUpSVG from "../icon/slideup.svg"
 import {atom, useRecoilState} from "recoil"
-import {Button, Slider} from "antd"
+import {Button, Slider, Spin} from "antd"
 import {useMediaQuery} from "react-responsive"
 
 interface PlayerState {
@@ -22,7 +22,7 @@ interface PlayerState {
 
 export const playerState = atom<PlayerState>({
   key: "playerState",
-  default: {show: false, play: false, title: "", cover: "", url: ""}
+  default: {show: true, play: false, title: "", cover: "", url: ""}
 })
 
 const PlayerContainer = styled.div`
@@ -77,6 +77,13 @@ const DetailsContainer = styled.div`
   gap: 5px;
 `
 
+interface LastListened {
+  progress: number
+  title: string
+  cover: string
+  url: string
+}
+
 export const Player: React.FC = () => {
   const [plState, setPlState] = useRecoilState(playerState)
   const [player, setPlayer] = useState<ReactPlayer>()
@@ -84,6 +91,33 @@ export const Player: React.FC = () => {
   const [duration, setDuration] = useState(0)
   const [played, setPlayed] = useState(0)
   const [expanded, setExpanded] = useState(true)
+  const [justLoaded, setJustLoaded] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [lastListened, setLastListened] = useState<LastListened | undefined>(() => {
+    const saved = localStorage.getItem("last_listened")
+    if (saved && saved !== "undefined") {
+      return JSON.parse(saved)
+    }
+    return undefined
+  })
+
+  useEffect(() => {
+    localStorage.setItem("last_listened", JSON.stringify(lastListened))
+  }, [lastListened])
+
+  useEffect(() => {
+    if (lastListened) {
+      setPlState({
+        play: false,
+        show: true,
+        title: lastListened.title,
+        cover: lastListened.cover,
+        url: lastListened.url
+      })
+      setPlayed(lastListened.progress)
+      setJustLoaded(true)
+    }
+  }, [])
 
   const isLargeScreen = useMediaQuery({query: "only screen and (min-width: 768px)"})
 
@@ -95,7 +129,7 @@ export const Player: React.FC = () => {
   }
 
   useEffect(() => {
-    if (plState.play) setPlaying(true)
+    if (plState.play) setTimeout(() => setPlaying(true), 100)
   }, [plState])
 
   return plState.show ? (
@@ -176,6 +210,21 @@ export const Player: React.FC = () => {
         url={plState.url}
         playing={playing}
         onProgress={(e) => setPlayed(e.playedSeconds)}
+        onReady={() => {
+          if (justLoaded && lastListened) {
+            player?.seekTo(lastListened.progress, "seconds")
+            setLoading(false)
+            setJustLoaded(false)
+          }
+        }}
+        onPause={() =>
+          setLastListened({
+            progress: played,
+            title: plState.title,
+            cover: plState.cover,
+            url: plState.url
+          })
+        }
         onSeek={(s) => setPlayed(s)}
         onDuration={(e) => setDuration(e)}
         style={{display: "none"}}

@@ -56,6 +56,7 @@ export const EbookGrid: React.FC = () => {
 
   const generateEbookCard = (book: EbookQuery_ebooks) => (
     <EbookCard
+      key={`ebook-${book.id}`}
       title={book.title}
       author={book.author_sort}
       cover={book.cover_path}
